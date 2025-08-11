@@ -87,34 +87,21 @@ class DungeonHunter{
 
         //replaced serial search with parallel search
      	ForkJoinPool pool = new ForkJoinPool();
-        HuntTask[] tasks = new HuntTask[numSearches];
+		searches = new Hunt[numSearches];
+		for (int i = 0; i < numSearches; i++) {
+			searches[i] = new Hunt(i + 1, rand.nextInt(dungeonRows), rand.nextInt(dungeonColumns), dungeon);
+		}
 
-        searches = new Hunt[numSearches];
 		tick();  // start timer
-        for (int i = 0; i < numSearches; i++) {
-            // Initialize each Hunt object here
-            searches[i] = new Hunt(i + 1, rand.nextInt(dungeonRows), rand.nextInt(dungeonColumns), dungeon);
-        }
 
-        
-        for (int i = 0; i < numSearches; i++) {
-            tasks[i] = new HuntTask(searches[i]); // Now searches[i] is initialized
-            tasks[i].fork();
-        }
+		HuntTask mainTask = new HuntTask(searches, 0, numSearches);
+		int max = pool.invoke(mainTask);  // invoke returns max mana found
 
-        int max = Integer.MIN_VALUE;
-        int finder = -1;
+		tock();  // end timer
 
-        for (int i = 0; i < numSearches; i++) {
-            int localMax = tasks[i].join();
-            if (localMax > max) {
-                max = localMax;
-                finder = i;
-            }
-            if (DEBUG) System.out.println("Shadow " + searches[i].getID() + " finished at " + localMax + " in " + searches[i].getSteps());
-        }
+		int finder = mainTask.getMaxIndex();  // get index of max mana search
 
-   		tock(); //end timer
+
    		
 		System.out.printf("\t dungeon size: %d,\n", gateSize);
 		System.out.printf("\t rows: %d, columns: %d\n", dungeonRows, dungeonColumns);

@@ -1,32 +1,64 @@
-import java.util.concurrent.ForkJoinTask;
-
+import java.util.concurrent.RecursiveTask;
 /**
- * Assignment1 PCP
- * 11/08/2025
- * ISCSRAD001 in collaboration with chatgpt
+ * PCP Assignment 1
+ * 2025
+ * ISCAD001
  */
 
-class HuntTask extends ForkJoinTask<Integer> {
-    private final Hunt hunt;
-    private int result;
+public class HuntTask extends RecursiveTask <Integer>{
+    private static final int THRESHOLD = 1000;  
+    private Hunt[] searches;
+    private int start, end;
 
-    HuntTask(Hunt hunt) {
-        this.hunt = hunt;
+    private int maxMana = Integer.MIN_VALUE;
+    private int maxIndex = -1;
+
+    public HuntTask(Hunt[] searches, int start, int end) {
+        this.searches = searches;
+        this.start = start;
+        this.end = end;
+    }
+
+
+    public int getMaxMana() {
+        return maxMana;
+    }
+    
+    public int getMaxIndex() {
+        return maxIndex;
     }
 
     @Override
-    public Integer getRawResult() {
-        return result;
-    }
+    protected Integer compute() {
+        if (end - start <= THRESHOLD) {
+            
+            for (int i = start; i < end; i++) {
+                int mana = searches[i].findManaPeak();
+                if (mana > maxMana) {
+                    maxMana = mana;
+                    maxIndex = i;
+                }
+            }
+            return maxMana;
+        } else {
+            // Split work
+            int mid = (start + end) / 2;
+            HuntTask left = new HuntTask(searches, start, mid);
+            HuntTask right = new HuntTask(searches, mid, end);
 
-    @Override
-    protected void setRawResult(Integer value) {
-        this.result = value;
-    }
+            left.fork();
+            int rightResult = right.compute();  
+            int leftResult = left.join(); 
 
-    @Override
-    protected boolean exec() {
-        result = hunt.findManaPeak();
-        return true;
+           if (leftResult > rightResult) {
+                maxMana = leftResult;
+                maxIndex = left.maxIndex;
+                 return leftResult;
+            } else {
+                maxMana = rightResult;
+                maxIndex = right.maxIndex;
+                return rightResult;
+            }
+        }
     }
 }
