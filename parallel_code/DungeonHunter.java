@@ -1,7 +1,7 @@
 
 /* Solo-levelling Hunt for Dungeon Master
  * Reference parallel version 
- *Radhiya Isaacs 2025, University of Cape Town
+ * Radhiya Isaacs 2025, University of Cape Town
  * Michelle Kuttel 2025, University of Cape Town
  * author of original Java code adapted with assistance from chatGPT for reframing 
  * and complex power - "mana" - function.
@@ -16,7 +16,7 @@
  * to locate the global maximum using parallel searches.
  *
  * Usage:
- *   java DungeonHunterParallel <gridSize> <numSearches> <randomSeed>
+ *   java DungeonHunter <gridSize> <numSearches> <randomSeed>
  *
  */
 
@@ -26,7 +26,8 @@ import java.util.concurrent.ForkJoinPool;
 
 
 
-class DungeonHunterParallel{
+
+class DungeonHunter{
 	static final boolean DEBUG=false;
 
 	//timers for how long it all takes
@@ -82,15 +83,22 @@ class DungeonHunterParallel{
     	int dungeonRows=dungeon.getRows();
     	int dungeonColumns=dungeon.getColumns();
      	
-    	tick();  //start timer
+    	
 
         //replaced serial search with parallel search
      	ForkJoinPool pool = new ForkJoinPool();
         HuntTask[] tasks = new HuntTask[numSearches];
 
         searches = new Hunt[numSearches];
+		tick();  // start timer
         for (int i = 0; i < numSearches; i++) {
-            tasks[i] = new HuntTask(searches[i]);
+            // Initialize each Hunt object here
+            searches[i] = new Hunt(i + 1, rand.nextInt(dungeonRows), rand.nextInt(dungeonColumns), dungeon);
+        }
+
+        
+        for (int i = 0; i < numSearches; i++) {
+            tasks[i] = new HuntTask(searches[i]); // Now searches[i] is initialized
             tasks[i].fork();
         }
 
