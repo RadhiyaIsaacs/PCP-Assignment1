@@ -15,3 +15,7 @@ run:
 
 clean:
 	rm -f $(SRC)/*.class
+
+parallel:
+	$(JAVAC) $(COMMON) $(PARALLEL)
+	$(JAVA) -cp $(SRC) DungeonHunterParallel $(ARGS)
