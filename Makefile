@@ -1,21 +1,23 @@
+JAVAC = javac
+JAVA = java
+SRC = SoloLevelling
 
-JAVAC=javac
-JAVA=java
-SRC=SoloLevelling
-CLASSES = $(SRC)/DungeonMap.java $(SRC)/Hunt.java $(SRC)/DungeonHunter.java
-# Default arguments (update these if needed)
-ARGS ?= 20 0.2 0  # Replace 'default_arguments' with your specific default arguments, if any
+COMMON = $(SRC)/DungeonMap.java $(SRC)/Hunt.java
+SERIAL = $(SRC)/DungeonHunter.java
+PARALLEL = $(SRC)/DungeonHunterParallel.java $(SRC)/HuntTask.java
 
+ARGS ?= 20 50 42
 
-all:
-	$(JAVAC) $(CLASSES)
-
-run:
-	$(JAVA) -cp $(SRC) DungeonHunter $(ARGS) 
-
-clean:
-	rm -f $(SRC)/*.class
+serial:
+	$(JAVAC) $(COMMON) $(SERIAL)
+	$(JAVA) -cp $(SRC) DungeonHunter $(ARGS)
 
 parallel:
 	$(JAVAC) $(COMMON) $(PARALLEL)
 	$(JAVA) -cp $(SRC) DungeonHunterParallel $(ARGS)
+
+clean:
+	rm -f $(SRC)/*.class
+all:
+	$(JAVAC) $(COMMON) $(SERIAL) $(PARALLEL)
+

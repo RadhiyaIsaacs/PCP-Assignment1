@@ -22,6 +22,10 @@
 
 import java.util.Random; //for the random search locations
 
+import java.util.concurrent.ForkJoinPool;
+
+
+
 class DungeonHunterParallel{
 	static final boolean DEBUG=false;
 
@@ -77,21 +81,14 @@ class DungeonHunterParallel{
     	
     	int dungeonRows=dungeon.getRows();
     	int dungeonColumns=dungeon.getColumns();
-     	searches= new Hunt [numSearches];
-    	for (int i=0;i<numSearches;i++)  //intialize searches at random locations in dungeon
-    		searches[i]=new Hunt(i+1, rand.nextInt(dungeonRows),
-    				rand.nextInt(dungeonColumns),dungeon);
-    	
-    	//do all the searches 	
-    	int max =Integer.MIN_VALUE;
-    	int localMax=Integer.MIN_VALUE;
-       	int finder =-1;
+     	
     	tick();  //start timer
 
         //replaced serial search with parallel search
      	ForkJoinPool pool = new ForkJoinPool();
         HuntTask[] tasks = new HuntTask[numSearches];
 
+        searches = new Hunt[numSearches];
         for (int i = 0; i < numSearches; i++) {
             tasks[i] = new HuntTask(searches[i]);
             tasks[i].fork();
