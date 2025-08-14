@@ -1,7 +1,6 @@
 
 /* Solo-levelling Hunt for Dungeon Master
- * Reference parallel version 
- * Radhiya Isaacs 2025, University of Cape Town
+ * Reference sequential version 
  * Michelle Kuttel 2025, University of Cape Town
  * author of original Java code adapted with assistance from chatGPT for reframing 
  * and complex power - "mana" - function.
@@ -13,7 +12,7 @@
  *
  * Main driver for the Dungeon Hunter assignment.
  * This program initializes the dungeon map and performs a series of searches
- * to locate the global maximum using parallel searches.
+ * to locate the global maximum.
  *
  * Usage:
  *   java DungeonHunter <gridSize> <numSearches> <randomSeed>
@@ -21,11 +20,7 @@
  */
 
 import java.util.Random; //for the random search locations
-
 import java.util.concurrent.ForkJoinPool;
-
-
-
 
 class DungeonHunter{
 	static final boolean DEBUG=false;
@@ -42,7 +37,7 @@ class DungeonHunter{
     	DungeonMap dungeon;  //object to store the dungeon as a grid
     	
      	int numSearches=10, gateSize= 10;		
-    	Hunt [] searches;		// Array of searches
+    	
   
     	Random rand = new Random();  //the random number generator
       	int randomSeed=0;  //set seed to have predictability for testing
@@ -66,6 +61,7 @@ class DungeonHunter{
         if (randomSeed < 0) {
                 throw new IllegalArgumentException("Random seed must be non-negative.");
             }
+        else if(randomSeed>0)  rand = new Random(randomSeed);  // BUG FIX
         } catch (NumberFormatException e) {
             System.err.println("Error: All arguments must be numeric.");
             System.exit(1);
@@ -74,6 +70,7 @@ class DungeonHunter{
             System.exit(1);
         }
  
+      	
     	xmin =-gateSize;
     	xmax = gateSize;
     	ymin = -gateSize;
@@ -82,26 +79,41 @@ class DungeonHunter{
     	
     	int dungeonRows=dungeon.getRows();
     	int dungeonColumns=dungeon.getColumns();
-     	
-    	
 
-        //replaced serial search with parallel search
-     	ForkJoinPool pool = new ForkJoinPool();
-		searches = new Hunt[numSearches];
-		for (int i = 0; i < numSearches; i++) {
-			searches[i] = new Hunt(i + 1, rand.nextInt(dungeonRows), rand.nextInt(dungeonColumns), dungeon);
+
+     	Hunt[] searches = new Hunt[numSearches];
+
+     	
+    	for (int i = 0; i < numSearches; i++) {
+            searches[i] = new Hunt(
+                i + 1,
+                rand.nextInt(dungeonRows),
+                rand.nextInt(dungeonColumns),
+                dungeon
+            );
+        }
+		
+		ForkJoinPool pool = new ForkJoinPool();
+
+    	tick();
+        // fork
+        for (Hunt hunt : searches) {
+            hunt.fork();
+        }
+        // join and get results
+		int max = Integer.MIN_VALUE;
+		int finder = -1;
+		for (int i = 0; i < searches.length; i++) {
+			int localMax = searches[i].join();
+			if (localMax > max) {
+				max = localMax;
+				finder = i;
+			}
 		}
 
-		tick();  // start timer
+		tock();
 
-		HuntTask mainTask = new HuntTask(searches, 0, numSearches);
-		int max = pool.invoke(mainTask);  // invoke returns max mana found
-
-		tock();  // end timer
-
-		int finder = mainTask.getMaxIndex();  // get index of max mana search
-
-
+		pool.shutdown();
    		
 		System.out.printf("\t dungeon size: %d,\n", gateSize);
 		System.out.printf("\t rows: %d, columns: %d\n", dungeonRows, dungeonColumns);
@@ -116,7 +128,7 @@ class DungeonHunter{
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		dungeon.visualisePowerMap("visualiseSearch.png", false);
-		dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+		dungeon.visualisePowerMap("Parallel_visualiseSearch.png", false);
+		dungeon.visualisePowerMap("Parallel_visualiseSearchPath.png", true);
     }
 }

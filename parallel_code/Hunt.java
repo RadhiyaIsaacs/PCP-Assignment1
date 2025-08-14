@@ -7,8 +7,9 @@
  *
  *M. Kuttel 2025
  */
+import java.util.concurrent.RecursiveTask;
 
-public class Hunt {
+public class Hunt extends RecursiveTask<Integer>{
 	private int id;						//  identifier for this hunt
 	private int posRow, posCol;		// Position in the dungeonMap
 	private int steps; 				//number of steps to end of the search
@@ -40,7 +41,7 @@ public class Hunt {
      * 
      * @return the highest power/mana located
      */
-	public int findManaPeak() {
+	protected Integer compute() {
 		int power=Integer.MIN_VALUE;
 		Direction next = Direction.STAY;
 		
@@ -50,6 +51,7 @@ public class Hunt {
 			steps++;
 			next = dungeon.getNextStepDirection(posRow, posCol);
 			if(DungeonHunter.DEBUG) System.out.println("Shadow "+getID()+" moving  "+next);
+
 			switch(next) {
 				case STAY: return power; //found local valley
 				case LEFT:

@@ -12,10 +12,10 @@ COMMON = $(SRC)/DungeonMap.java
 SERIAL = $(SRC)/DungeonHunter.java $(SRC)/Hunt.java
 
 # Parallel version files
-PARALLEL = $(PARALLEL_SRC)/DungeonHunter.java $(PARALLEL_SRC)/Hunt.java $(PARALLEL_SRC)/HuntTask.java
+PARALLEL = $(PARALLEL_SRC)/DungeonHunter.java $(PARALLEL_SRC)/Hunt.java 
 
 # Arguments to main programs
-ARGS ?= 50 50 42
+ARGS ?= 20 1.0 42 #20 0.2 0
 
 # Compile and run serial version
 serial:
@@ -34,3 +34,4 @@ clean:
 # Compile everything (optional)
 all:
 	$(JAVAC) $(COMMON) $(SERIAL) $(PARALLEL)
+	

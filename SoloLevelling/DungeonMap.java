@@ -12,13 +12,11 @@
  * 2025
  */
 
-import java.util.Random;
-
-import javax.imageio.ImageIO;
-
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Random;
+import javax.imageio.ImageIO;
 
 public class DungeonMap {
 
