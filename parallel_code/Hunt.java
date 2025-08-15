@@ -1,3 +1,4 @@
+package parallel_code;
 
 /**
  * Hunt.java

@@ -1,3 +1,5 @@
+package SoloLevelling;
+
 
 /* Solo-levelling Hunt for Dungeon Master
  * Reference sequential version 
@@ -21,7 +23,7 @@
 
 import java.util.Random; //for the random search locations
 
-class DungeonHunter{
+public class DungeonHunter{
 	static final boolean DEBUG=false;
 
 	//timers for how long it all takes

@@ -1,4 +1,4 @@
-
+package SoloLevelling;
 /**
  * Hunt.java
  *
@@ -7,6 +7,7 @@
  *
  *M. Kuttel 2025
  */
+
 
 public class Hunt {
 	private int id;						//  identifier for this hunt

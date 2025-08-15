@@ -14,18 +14,26 @@ SERIAL = $(SRC)/DungeonHunter.java $(SRC)/Hunt.java
 # Parallel version files
 PARALLEL = $(PARALLEL_SRC)/DungeonHunter.java $(PARALLEL_SRC)/Hunt.java 
 
+# Test runner
+TESTRUNNER = TestRunner.java
+
 # Arguments to main programs
-ARGS ?= 20 1.0 42 #20 0.2 0
+ARGS ?= 300 0.5 42 #20 0.2 0
 
 # Compile and run serial version
 serial:
 	$(JAVAC) $(COMMON) $(SERIAL)
-	$(JAVA) -cp $(SRC) DungeonHunter $(ARGS)
+	$(JAVA) -cp . SoloLevelling.DungeonHunter $(ARGS)
 
 # Compile and run parallel version
 parallel:
 	$(JAVAC) $(COMMON) $(PARALLEL)
-	$(JAVA) -cp $(PARALLEL_SRC):$(SRC) DungeonHunter $(ARGS)
+	$(JAVA) -cp . parallel_code.DungeonHunter $(ARGS)
+
+# Compile and run TestRunner for comparison
+compare: all
+	$(JAVAC) $(TESTRUNNER)
+	$(JAVA) -cp . TestRunner
 
 # Clean all .class files in both folders
 clean:

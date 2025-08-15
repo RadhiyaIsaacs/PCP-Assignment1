@@ -1,4 +1,4 @@
-
+package SoloLevelling;
 /**
  * DungeonMap.java
  *
@@ -11,6 +11,7 @@
  * Michelle Kuttel
  * 2025
  */
+
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
