@@ -1,4 +1,3 @@
-package SoloLevelling;
 
 
 /* Solo-levelling Hunt for Dungeon Master
@@ -22,8 +21,9 @@ package SoloLevelling;
  */
 
 import java.util.Random; //for the random search locations
+import java.util.concurrent.ForkJoinPool;
 
-public class DungeonHunter{
+public class DungeonHunterParallel{
 	static final boolean DEBUG=false;
 
 	//timers for how long it all takes
@@ -31,7 +31,6 @@ public class DungeonHunter{
 	static long endTime = 0;
 	private static void tick() {startTime = System.currentTimeMillis(); }
 	private static void tock(){endTime=System.currentTimeMillis(); }
-	
 	public static void run(int gridSize, double factor, int seed) {
         String[] args = {
             String.valueOf(gridSize),
@@ -40,13 +39,14 @@ public class DungeonHunter{
         };
         main(args);
     } 
+
     public static void main(String[] args)  {
     	
     	double xmin, xmax, ymin, ymax; //dungeon limits - dungeons are square
-    	DungeonMap dungeon;  //object to store the dungeon as a grid
+    	DungeonMapParallel dungeon;  //object to store the dungeon as a grid
     	
      	int numSearches=10, gateSize= 10;		
-    	Hunt [] searches;		// Array of searches
+    	
   
     	Random rand = new Random();  //the random number generator
       	int randomSeed=0;  //set seed to have predictability for testing
@@ -64,7 +64,7 @@ public class DungeonHunter{
              throw new IllegalArgumentException("Grid size must be greater than 0.");
          }
     	
-    	numSearches = (int) (Double.parseDouble(args[1])*(gateSize*2)*(gateSize*2)*DungeonMap.RESOLUTION);
+    	numSearches = (int) (Double.parseDouble(args[1])*(gateSize*2)*(gateSize*2)*DungeonMapParallel.RESOLUTION);
     	
     	randomSeed=Integer.parseInt( args[2] );
         if (randomSeed < 0) {
@@ -84,32 +84,46 @@ public class DungeonHunter{
     	xmax = gateSize;
     	ymin = -gateSize;
     	ymax = gateSize;
-    	dungeon = new DungeonMap(xmin,xmax,ymin,ymax,randomSeed); // Initialize dungeon
+    	dungeon = new DungeonMapParallel(xmin,xmax,ymin,ymax,randomSeed); // Initialize dungeon
     	
     	int dungeonRows=dungeon.getRows();
     	int dungeonColumns=dungeon.getColumns();
-     	searches= new Hunt [numSearches];
+
+
+     	HuntParallel[] searches = new HuntParallel[numSearches];
+
      	
+    	for (int i = 0; i < numSearches; i++) {
+            searches[i] = new HuntParallel(
+                i + 1,
+                rand.nextInt(dungeonRows),
+                rand.nextInt(dungeonColumns),
+                dungeon
+            );
+        }
+		
+		ForkJoinPool pool = new ForkJoinPool();
 
+    	tick();
+        // fork
+        for (HuntParallel hunt : searches) {
+            hunt.fork();
+        }
+        // join and get results
+		int max = Integer.MIN_VALUE;
+		int finder = -1;
+		
+		for (int i = 0; i < searches.length; i++) {
+			int localMax = searches[i].join();
+			if (localMax > max) {
+				max = localMax;
+				finder = i;
+			}
+		}
 
-    	for (int i=0;i<numSearches;i++)  //intialize searches at random locations in dungeon
-    		searches[i]=new Hunt(i+1, rand.nextInt(dungeonRows),
-    				rand.nextInt(dungeonColumns),dungeon);
-    	
-    	//do all the searches 	
-    	int max =Integer.MIN_VALUE;
-    	int localMax=Integer.MIN_VALUE;
-       	int finder =-1;
-    	tick();  //start timer
-     	for  (int i=0;i<numSearches;i++) {
-    		localMax=searches[i].findManaPeak();
-    		if(localMax>max) {
-    			max=localMax;
-    			finder=i; //keep track of who found it
-    		}
-    		if(DEBUG) System.out.println("Shadow "+searches[i].getID()+" finished at  "+localMax + " in " +searches[i].getSteps());
-    	}
-   		tock(); //end timer
+		tock();
+
+		pool.shutdown();
    		
 		System.out.printf("\t dungeon size: %d,\n", gateSize);
 		System.out.printf("\t rows: %d, columns: %d\n", dungeonRows, dungeonColumns);
@@ -124,7 +138,8 @@ public class DungeonHunter{
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		//dungeon.visualisePowerMap("visualiseSearch.png", false);
-		//dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+		dungeon.visualisePowerMap("visualiseSearch.png", false);
+		dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+
     }
 }

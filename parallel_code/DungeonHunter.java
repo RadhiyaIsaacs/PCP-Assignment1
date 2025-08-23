@@ -23,7 +23,7 @@ package parallel_code;
 import java.util.Random; //for the random search locations
 import java.util.concurrent.ForkJoinPool;
 
-class DungeonHunter{
+public class DungeonHunter{
 	static final boolean DEBUG=false;
 
 	//timers for how long it all takes
@@ -31,6 +31,14 @@ class DungeonHunter{
 	static long endTime = 0;
 	private static void tick() {startTime = System.currentTimeMillis(); }
 	private static void tock(){endTime=System.currentTimeMillis(); }
+	public static void run(int gridSize, double factor, int seed) {
+        String[] args = {
+            String.valueOf(gridSize),
+            String.valueOf(factor),
+            String.valueOf(seed)
+        };
+        main(args);
+    } 
 
     public static void main(String[] args)  {
     	
@@ -104,6 +112,7 @@ class DungeonHunter{
         // join and get results
 		int max = Integer.MIN_VALUE;
 		int finder = -1;
+		
 		for (int i = 0; i < searches.length; i++) {
 			int localMax = searches[i].join();
 			if (localMax > max) {
@@ -129,8 +138,8 @@ class DungeonHunter{
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		dungeon.visualisePowerMap("visualiseSearch.png", false);
-		dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+		//dungeon.visualisePowerMap("visualiseSearch.png", false);
+		//dungeon.visualisePowerMap("visualiseSearchPath.png", true);
 
     }
 }

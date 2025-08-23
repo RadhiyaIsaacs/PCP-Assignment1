@@ -1,0 +1,61 @@
+radhiya@RadhiLaptop:~/PCPass1$ git log
+commit eba156cfd1ea70c84434f7020146b6eb93dfdcda (HEAD -> master, origin/master)
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Fri Aug 15 13:28:18 2025 +0200
+
+    Created TestRunner.java to run test to check image outputs
+
+commit 409e33133e7a4c60dd56971dd3a36277f7588128
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Thu Aug 14 18:59:38 2025 +0200
+
+    Adjusted parallel code so that the images produced are the same. No longer usign HuntTask.class
+
+commit 8f77e61544fe55719a1a207b032ccd9c304a2c24
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Mon Aug 11 17:18:59 2025 +0200
+
+     Fix HuntTask to properly extend RecursiveTask and fix compile errors
+
+commit 359f7463117c6df71edc4781be95c8b5a7371dfc
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Mon Aug 11 17:12:50 2025 +0200
+
+    changed from recursiveaction to recursivtask in HuntTask class also fixed up some other stuff
+
+commit f02fcabd4a3f8d9e171d054bfb9688325e686f49
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Mon Aug 11 16:53:22 2025 +0200
+
+    parallel code is work but extremely slow
+
+commit b83648837f6fc24e8a6003a5963089cd13044797
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Mon Aug 11 15:15:06 2025 +0200
+
+    replaced given files with version 2 files
+
+commit 87e8e1e027e65882e1c1cc29155036874e87eb7a
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Mon Aug 11 14:55:48 2025 +0200
+
+    edited make file to run parallel version
+
+commit b8db9728cf019106d4261815cef578e6f60c0456
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Mon Aug 11 14:47:41 2025 +0200
+
+    first attempt at parallel version of dungeonhunter code
+
+commit 3289ed9ce941389902e486cdde972a820d491597
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Mon Aug 11 14:35:35 2025 +0200
+
+    Initial commit with existing files
+
+commit 0cd595095ef5167a25c63c9743d74ba56ae6cd8b
+Author: radhiya <radhiyaisaacs@gmail.com>
+Date:   Tue Aug 5 16:35:56 2025 +0200
+
+    Initial commit
+(END)
