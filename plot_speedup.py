@@ -1,26 +1,28 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Load CSV
+# Load benchmark results
 df = pd.read_csv("benchmark_results.csv")
 
-# Get unique grid sizes
-grid_sizes = sorted(df["GridSize"].unique())
-
-plt.figure(figsize=(8,6))
-
-# Plot each grid size on the same graph
-for grid in grid_sizes:
-    subset = df[df["GridSize"] == grid].sort_values("SearchFactor")
-    plt.plot(subset["SearchFactor"], subset["Speedup"], 
-             marker="o", label=f"Grid {grid}")
-
-plt.title("Parallel Speedup vs Search Density")
-plt.xlabel("Search Factor (Density)")
-plt.ylabel("Speedup (Serial / Parallel)")
-plt.legend(title="Grid Size", bbox_to_anchor=(1.05, 1), loc='upper left')
+# Plot Serial vs Parallel time
+plt.figure(figsize=(10, 6))
+plt.plot(df['GridSize'], df['SerialTime'], marker='o', label='Serial')
+plt.plot(df['GridSize'], df['ParallelTime'], marker='s', label='Parallel')
+plt.title("Nightmare: Serial vs Parallel Execution Time")
+plt.xlabel("Grid Size")
+plt.ylabel("Time (ms)")
+plt.legend()
 plt.grid(True)
-plt.tight_layout()
-plt.savefig("speedup_vs_density.png", bbox_inches='tight')
 plt.show()
-print("Graph saved as speedup_vs_density.png")
+
+# Plot Speedup = Serial / Parallel
+df['Speedup'] = df['SerialTime'] / df['ParallelTime']
+
+plt.figure(figsize=(10, 6))
+plt.plot(df['GridSize'], df['Speedup'], marker='^', color='green')
+plt.title("Nightmare: Parallel Speedup")
+plt.xlabel("Grid Size")
+plt.ylabel("Speedup (Serial / Parallel)")
+plt.grid(True)
+plt.show()

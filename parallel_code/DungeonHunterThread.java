@@ -1,5 +1,8 @@
 package parallel_code;
 
+
+//class to test thread sive vs runtime
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -66,14 +69,14 @@ class DungeonHunterThread {
             );
         }
 
-        ForkJoinPool pool = new ForkJoinPool(numThreads);  // specify thread count
+        ForkJoinPool pool = new ForkJoinPool(numThreads);  
 
         tick();
 
         // Convert array to a list for easier iteration
         List<Hunt> tasks = Arrays.asList(searches);
 
-        // Fork all tasks (start asynchronously)
+        // Fork all tasks 
         for (Hunt hunt : tasks) {
             pool.submit(hunt);   // submit to ForkJoinPool
         }
@@ -91,7 +94,7 @@ class DungeonHunterThread {
         }
 
         tock();
-        pool.shutdown();   // shutdown the pool after all tasks are done
+        pool.shutdown();   // shutdown the pool 
 
 
 
@@ -112,7 +115,7 @@ class DungeonHunterThread {
                 dungeon.getXcoord(searches[finder].getPosRow()),
                 dungeon.getYcoord(searches[finder].getPosCol()));
 
-        //dungeon.visualisePowerMap("visualiseSearch.png", false);
-        //dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+        dungeon.visualisePowerMap("visualiseSearch.png", false);
+        dungeon.visualisePowerMap("visualiseSearchPath.png", true);
     }
 }
