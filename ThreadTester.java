@@ -1,5 +1,8 @@
 import java.io.*;
 
+// programme to run parallel_code with differnt thread sizes
+// radhiya isaacs with assistance from chatGPT
+
 public class ThreadTester {
     private static final int WARMUP_RUNS = 1;      
     private static final int MEASURED_RUNS = 4;    

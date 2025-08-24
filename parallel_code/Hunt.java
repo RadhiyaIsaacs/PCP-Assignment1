@@ -4,7 +4,7 @@ package parallel_code;
  * Hunt.java
  *
  * Represents a search in the grid of a DungeonMap to identify the local maximum from a start point.
- *
+ * Only change findMaxPeak -> compute()
  *
  *M. Kuttel 2025
  */

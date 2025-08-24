@@ -3,6 +3,7 @@ package parallel_code;
 /* Solo-levelling Hunt for Dungeon Master
  * Reference sequential version 
  * Michelle Kuttel 2025, University of Cape Town
+ * Radhiya Isaacs parallel version
  * author of original Java code adapted with assistance from chatGPT for reframing 
  * and complex power - "mana" - function.
  * Inspired by  "Hill Climbing with Montecarlo"
@@ -138,8 +139,8 @@ public class DungeonHunter{
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		//dungeon.visualisePowerMap("visualiseSearch.png", false);
-		//dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+		dungeon.visualisePowerMap("visualiseSearch.png", false);
+		dungeon.visualisePowerMap("visualiseSearchPath.png", true);
 
     }
 }

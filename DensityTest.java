@@ -1,5 +1,6 @@
 import java.io.*;
-
+// programme to test the effects of differnt densities on the parallel and serial programme
+// radhiya isaacs with assistance from chatGPT
 public class DensityTest {
     private static final int WARMUP_RUNS = 1; // Warmup runs to account for JIT compilation
     private static final int MEASURED_RUNS = 4; // Number of measured runs to average

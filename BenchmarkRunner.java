@@ -1,4 +1,6 @@
 import java.io.*;
+// programme to test the effects of differnt dugeon sizes on the parallel and serial programme
+// radhiya isaacs with assistance from chatGPT
 
 public class BenchmarkRunner {
     private static final int WARMUP_RUNS = 1; // Warmup runs to account for JIT compilation

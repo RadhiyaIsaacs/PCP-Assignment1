@@ -1,3 +1,5 @@
+# programme to polt speedup graph 
+# radhiya isaacs with assistance from chatGPT
 
 import pandas as pd
 import matplotlib.pyplot as plt

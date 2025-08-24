@@ -1,3 +1,6 @@
+# programme to plot thread performace  
+# radhiya isaacs with assistance from chatGPT
+
 import pandas as pd
 import matplotlib.pyplot as plt
 

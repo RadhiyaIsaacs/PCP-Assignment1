@@ -1,7 +1,7 @@
 package parallel_code;
 
 
-//class to test thread sive vs runtime
+//class to test thread size vs runtime
 
 import java.util.Arrays;
 import java.util.List;
